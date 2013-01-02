@@ -26,6 +26,7 @@
             {% if enableSandbox %}
                 <li data-pane="sandbox">Sandbox</li>
             {% endif %}
+            <li data-pane="response">Example</li>
         </ul>
 
         <div class="panes">
@@ -33,6 +34,11 @@
             {% if data.documentation is defined and data.documentation is not empty %}
                 <h4>Documentation</h4>
                 <div>{{ data.documentation|extra_markdown }}</div>
+            {% endif %}
+
+            {% if data.output is defined and data.output is not empty %}
+                <h4>Response</h4>
+                <div>{{ data.output|extra_markdown }}</div>
             {% endif %}
 
             {% if data.requirements is defined  and data.requirements is not empty %}
@@ -155,6 +161,10 @@
                 </tbody>
             </table>
             {% endif %}
+
+            </div>
+
+            <div class="pane example">
 
             </div>
 

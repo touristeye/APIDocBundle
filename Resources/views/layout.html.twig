@@ -16,13 +16,13 @@
         <div id="header">
             <a href=""><h1>{{ apiName }}</h1></a>
             <div id="sandbox_configuration">
-                request format:
-                <select id="request_format">
-                    <option value="json"{{ defaultRequestFormat == 'json' ? ' selected' : '' }}>JSON</option>
-                    <option value="xml"{{ defaultRequestFormat == 'xml' ? ' selected' : '' }}>XML</option>
+                locale:
+                <select id="locale">
+                    <option value="en" selected>English</option>
+                    <option value="es">Spanish</option>
                 </select>
                 {% if authentication %}
-                    api key: <input type="text" id="api_key"/>
+                    authtoken: <input type="text" id="api_key"/>
                 {% endif %}
             </div>
             <br style="clear: both;" />
@@ -146,13 +146,13 @@
                         method = method.split('|').sort().pop();
                     }
 
-                    var requestFormat = $('#request_format').val();
+                    /*var requestFormat = $('#request_format').val();
                     var requestFormatMethod = '{{ requestFormatMethod }}';
                     if (requestFormatMethod == 'format_param') {
                         params['_format'] = requestFormat;
                     } else if (requestFormatMethod == 'accept_header') {
                         headers['Accept'] = 'application/' + requestFormat;
-                    }
+                    }*/
 
                     // retrieve all the parameters to send
                     $('.parameters .tuple', $(this)).each(function() {
@@ -184,22 +184,30 @@
                             url = url.replace('{' + key + '}', params[key]);
                             delete params[key];
                         }
+                        else {
+                            url += url.indexOf('?') > 0 ? '&' : '?';
+                            url += key + '=' + params[key];
+                        }
                     };
 
                     // disable all the fiels and buttons
                     $('input, button', $(this)).attr('disabled', 'disabled');
 
                     // append the api key
-                    if (api_key_parameter) {
+                    if (api_key_parameter && $('#api_key').val() ) {
                         url += url.indexOf('?') > 0 ? '&' : '?';
                         url += api_key_parameter + '=' + $('#api_key').val();
                     }
 
+                    // add locale
+                    url += url.indexOf('?') > 0 ? '&' : '?';
+                    url += 'locale=' + $('#locale').val();
+
                     // and trigger the API call
                     $.ajax({
-                        url: '{{ endpoint }}' + url,
+                        url: url,
                         type: method,
-                        data: content.length ? content : params,
+                        data: content.length ? content : [],
                         headers: headers,
                         complete: function(xhr) {
                             displayResponse(xhr, method, url, result_container);

@@ -299,6 +299,10 @@ class ApiDoc
             $data['response'] = $response;
         }
 
+        if ($output = $this->output) {
+            $data['output'] = $output;
+        }
+
         if ($statusCodes = $this->statusCodes) {
             $data['statusCodes'] = $statusCodes;
         }
